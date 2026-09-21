@@ -1,0 +1,32 @@
+============================================================
+SMARD MARKET PRICE DATA VALIDATION REPORT
+============================================================
+source: SMARD / Bundesnetzagentur
+filter: 4169
+region: DE
+resolution: hour
+requested analysis period: 2024-01-01 00:00:00 Europe/Berlin inclusive to 2025-01-01 00:00:00 Europe/Berlin exclusive (2023-12-31T23:00:00Z to 2024-12-31T23:00:00Z UTC)
+number of final rows: 8784
+first timestamp: 2023-12-31T23:00:00Z
+last timestamp: 2024-12-31T22:00:00Z
+first local timestamp: 2024-01-01T00:00:00+01:00
+last local timestamp: 2024-12-31T23:00:00+01:00
+total local delivery dates: 366
+March 31 row count (spring DST): 23
+October 27 row count (autumn DST): 25
+standard 24h delivery days: 364
+duplicate timestamp count: 0
+missing hourly interval count: 0
+null price count: 0
+non-numeric price count: 0
+negative-price hour count: 457
+zero-price hour count: 62
+minimum price: -135.45 EUR/MWh
+maximum price: 936.28 EUR/MWh
+mean price: 78.5120 EUR/MWh
+median price: 79.5850 EUR/MWh
+standard deviation: 52.7264 EUR/MWh
+number of downloaded API chunks: 56
+============================================================
+STATUS: PASSED - All German market-day validation rules strictly satisfied.
+============================================================
