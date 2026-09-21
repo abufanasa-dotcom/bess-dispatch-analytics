@@ -12,7 +12,7 @@ This project provides an ex-post techno-economic evaluation of a utility-scale B
 - **Evaluation Period**: Calendar year 2024 (2024-01-01 00:00 to 2025-01-01 00:00 Europe/Berlin).
 - **Time Horizon**: 8,784 continuous hourly intervals across 366 delivery days (leap year).
 - **Daylight Saving Time (DST)**: Full compliance with local German market delivery days, safely resolving the 23-hour spring transition (2024-03-31) and the 25-hour autumn transition (2024-10-27).
-- **Negative Settlement Prices**: 457 hours settled below 0.00 EUR/MWh (minimum: -130.90 EUR/MWh on 2024-05-12).
+- **Negative Settlement Prices**: 457 hours settled below 0.00 EUR/MWh (minimum: -135.45 EUR/MWh).
 - **Battery System**: 1.0 MW / 2.0 MWh grid-connected lithium-ion battery model.
 
 ---
@@ -64,7 +64,7 @@ The analysis follows an 8-stage engineering and quantitative workflow:
 
 1. **SMARD Data Ingestion**: Automated retrieval and caching of official SMARD hourly day-ahead electricity prices for the DE/LU bidding zone.
 2. **UTC + Europe/Berlin DST Alignment**: Canonical internal UTC storage with calendar-correct mapping to Europe/Berlin market delivery days (23, 24, or 25 hours).
-3. **Physical Battery Engine**: Object-oriented `BESSModel` enforcing asymmetric 95% charge and 95% discharge efficiencies, rated power limits (1.0 MW), and strict SOC boundaries (10% to 90%).
+3. **Physical Battery Engine**: Object-oriented `BatteryModel` enforcing asymmetric 95% charge and 95% discharge efficiencies, rated power limits (1.0 MW), and strict SOC boundaries (10% to 90%).
 4. **Fixed Baseline Reference**: Transparent, price-blind local-time schedule (charge at 03:00, discharge at 18:00 and 19:00, charge at 23:00 Europe/Berlin to return to 50% terminal SOC target, all other hours idle) establishing an un-optimized engineering benchmark.
 5. **SciPy / HiGHS MILP Formulation**: Daily ex-post Mixed-Integer Linear Program preventing simultaneous charging and discharging via binary variables while strictly enforcing terminal SOC equality.
 6. **Physical Simulation Replay**: Every hourly schedule produced by the optimizer is independently replayed through `BatteryModel` to verify mathematical and physical consistency within numerical tolerance ($< 10^{-10}$ EUR discrepancy). Solver/simulation consistency verifies internal mathematical correctness and is not a real-world commercial validation.
@@ -128,7 +128,7 @@ The representative day is **2024-12-12**, dynamically identified as the highest 
 - **Net Outperformance**: **+€672.22**
 - **Daily Price Spread**: **€828.93 / MWh** (min: €107.35, max: €936.28)
 
-During this extreme winter Dunkelflaute price event, the battery performed two complete high-spread cycles, fully charging during morning and afternoon price troughs and discharging during extreme morning and evening price spikes while strictly maintaining SOC within [10%, 90%].
+During this high-value delivery day with a large intraday price spread, the battery performed two complete high-spread cycles, fully charging during morning and afternoon price troughs and discharging during extreme morning and evening price spikes while strictly maintaining SOC within [10%, 90%].
 
 - **Optimized Arbitrage Timing**: BESS charges during off-peak morning and early afternoon dips and discharges during morning and evening spikes, remaining physically feasible within the simplified historical benchmark (not a predictive forecasting model or live trading strategy).
 
@@ -197,7 +197,7 @@ The codebase enforces full automated verification across all engineering stages:
 ```text
 bess-dispatch-analytics/
 ├── data/
-│   ├── raw/                               # Cached SMARD API chunks
+│   ├── raw/                               # Generated local SMARD cache; gitignored
 │   └── processed/
 │       ├── de_lu_day_ahead_prices_2024.csv # Validated 2024 day-ahead series (8,784 rows)
 │       └── price_data_validation.txt      # Data integrity verification report
